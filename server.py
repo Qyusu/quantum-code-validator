@@ -88,4 +88,14 @@ async def version(request: Request) -> JSONResponse:
 
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    import asyncio
+    import os
+
+    port = int(os.environ.get("PORT", 8000))
+    asyncio.run(
+        mcp.run_sse_async(
+            host="0.0.0.0",
+            port=port,
+            log_level="debug",
+        )
+    )
