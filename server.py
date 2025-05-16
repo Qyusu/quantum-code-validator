@@ -1,6 +1,8 @@
 from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
+from starlette.requests import Request
+from starlette.responses import PlainTextResponse
 
 from tools import request_pennylane_reference, validate_pennylane_code_statically
 
@@ -53,6 +55,11 @@ def request_pennylane_method_reference(method_name: str, version: Optional[str] 
         str: The reference documentation for the specified PennyLane method.
     """
     return request_pennylane_reference(method_name, version)
+
+
+@mcp.custom_route("/healthz", methods=["GET"])
+async def health_check(request: Request) -> PlainTextResponse:
+    return PlainTextResponse("OK")
 
 
 if __name__ == "__main__":
