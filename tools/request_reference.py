@@ -2,8 +2,8 @@ import json
 import os
 from typing import Optional
 
-from scripts.common import get_latest_version
-from scripts.constants import REF_DOCS_DIR
+from constants import REF_DOCS_DIR
+from tools.common import get_latest_version
 
 
 def request_pennylane_reference(method_name: str, version: Optional[str] = None) -> str:

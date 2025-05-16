@@ -5,8 +5,8 @@ import py_compile
 import re
 from typing import Optional, cast
 
-from scripts.common import get_latest_version
-from scripts.constants import REF_DOCS_DIR
+from constants import REF_DOCS_DIR
+from tools.common import get_latest_version
 
 TMP_CODE_PATH = "tmp_code.py"
 
