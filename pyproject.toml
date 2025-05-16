@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "mcp[cli]>=1.8.1",
     "pennylane==0.41.1",
+    "uvicorn>=0.34.2",
 ]
 
 [dependency-groups]
