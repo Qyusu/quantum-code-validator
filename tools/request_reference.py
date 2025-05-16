@@ -6,15 +6,16 @@ from scripts.common import get_latest_version
 from scripts.constants import REF_DOCS_DIR
 
 
-def request_reference(method_name: str, version: Optional[str] = None) -> str:
-    """Request reference documentation for a specific method in a specific version of the quantum library.
+def request_pennylane_reference(method_name: str, version: Optional[str] = None) -> str:
+    """Request reference documentation for a specific method in a specific version of the PennyLane library.
+    The PennyLane library is a Python library for quantum computing.
 
     Args:
         method_name (str): The name of the method to request reference documentation.
-        version (Optional[str]): The version of the quantum library to use.
+        version (Optional[str]): The version of the PennyLane library to use.
 
     Returns:
-        str: The reference documentation for the specified quantum method.
+        str: The reference documentation for the specified PennyLane method.
     """
     if version is None:
         version = get_latest_version()

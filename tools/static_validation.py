@@ -174,7 +174,7 @@ def validate_pennylane_methods(code: str, version: Optional[str] = None) -> dict
     return {"valid": len(errors) == 0, "errors": errors}
 
 
-def static_validation(code: str, version: Optional[str] = None) -> dict[str, bool | list[str]]:
+def validate_pennylane_code_statically(code: str, version: Optional[str] = None) -> dict[str, bool | list[str]]:
     ast_errors = validate_by_ast(code)
     py_compile_errors = validate_by_py_compile(code)
     pennylane_errors = validate_pennylane_methods(code, version)
