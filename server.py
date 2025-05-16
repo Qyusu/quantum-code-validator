@@ -87,11 +87,5 @@ async def version(request: Request) -> JSONResponse:
     return JSONResponse({"version": "1.0.0", "protocol": "mcp", "protocolVersion": "2024-11-05"})
 
 
-async def main():
-    await mcp.run_sse_async()
-
-
 if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
+    mcp.run(transport="streamable-http")

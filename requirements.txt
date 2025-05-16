@@ -38,7 +38,7 @@ jupyter-client==8.6.3
 jupyter-core==5.7.2
 markdown-it-py==3.0.0
 matplotlib-inline==0.1.7
-mcp==1.8.1
+mcp==1.9.0
 mdurl==0.1.2
 nest-asyncio==1.6.0
 networkx==3.4.2

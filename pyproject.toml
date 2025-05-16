@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "google-cloud-storage>=3.1.0",
-    "mcp[cli]>=1.8.1",
+    "mcp[cli]==1.9.0",
     "pennylane==0.41.1",
 ]
 
