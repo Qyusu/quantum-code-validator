@@ -2,7 +2,7 @@ from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
 from starlette.requests import Request
-from starlette.responses import PlainTextResponse
+from starlette.responses import JSONResponse, PlainTextResponse
 
 from tools import request_pennylane_reference, validate_pennylane_code_statically
 
@@ -60,6 +60,31 @@ def request_pennylane_method_reference(method_name: str, version: Optional[str] 
 @mcp.custom_route("/healthz", methods=["GET"])
 async def health_check(request: Request) -> PlainTextResponse:
     return PlainTextResponse("OK")
+
+
+@mcp.custom_route("/", methods=["GET"])
+async def root(request: Request) -> PlainTextResponse:
+    return PlainTextResponse("Quantum Code Validator MCP Server")
+
+
+@mcp.custom_route("/tools", methods=["GET"])
+async def list_tools(request: Request) -> JSONResponse:
+    tools = [
+        {
+            "name": "validate_pennylane_method_by_static",
+            "description": "Static validation of code containing PennyLane methods against the documentation of the target version.",
+        },
+        {
+            "name": "request_pennylane_method_reference",
+            "description": "Request for the reference documentation of a method in a specific version of the PennyLane library.",
+        },
+    ]
+    return JSONResponse({"tools": tools})
+
+
+@mcp.custom_route("/version", methods=["GET"])
+async def version(request: Request) -> JSONResponse:
+    return JSONResponse({"version": "1.0.0", "protocol": "mcp", "protocolVersion": "2024-11-05"})
 
 
 if __name__ == "__main__":
