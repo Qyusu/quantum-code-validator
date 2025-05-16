@@ -3,6 +3,8 @@ services:
     name: quantum-code-validator
     env: python
     plan: starter
+    region: singapore
+    repo: https://github.com/Qyusu/quantum-code-validator
     branch: main
     buildCommand: pip install -r requirements.txt
     startCommand: python server.py
