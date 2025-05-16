@@ -2,9 +2,12 @@ import ast
 import json
 import os
 import py_compile
+import re
 from typing import Optional, cast
 
-REF_DOCS_DIR = "/Users/kenya/sandbox/Qyusu/quantum-code-validator/refdocs"
+from scripts.common import get_latest_version
+from scripts.constants import REF_DOCS_DIR
+
 TMP_CODE_PATH = "tmp_code.py"
 
 
@@ -58,17 +61,6 @@ def _extract_pennylane_methods(code: str) -> list[str]:
     return list(set(functions))
 
 
-def _get_latest_version() -> str:
-    def version_to_tuple(v: str) -> tuple:
-        return tuple(map(int, v.lstrip("v").split(".")))
-
-    file_list = os.listdir(f"{REF_DOCS_DIR}/pennylane/raw")
-    versions = [f.replace(".json", "") for f in file_list if f.endswith(".json")]
-    latest_version = max(versions, key=version_to_tuple)
-
-    return latest_version
-
-
 def get_reference(version: str) -> dict[str, dict[str, list[dict[str, str]]]]:
     reference_path = os.path.join(f"{REF_DOCS_DIR}/pennylane/format", f"{version}.json")
     if not os.path.exists(reference_path):
@@ -87,12 +79,45 @@ def _extract_method_name(code_str: str) -> str:
     return ""
 
 
+def _is_optional_type(type_str: str) -> bool:
+    type_str = type_str.replace(" ", "")
+
+    # pattern1: Optional[<type>]
+    if re.match(r"^Optional\[[^\[\]]+\]$", type_str):
+        return True
+
+    # pattern2: Union[..., None] or Union[None, ...]
+    if re.match(r"^Union\[.*None.*\]$", type_str):
+        return True
+
+    # pattern3: <type> | None
+    if "|" in type_str:
+        parts = type_str.split("|")
+        if "None" in parts:
+            return True
+
+    # patter4: <type> or None
+    if "or" in type_str:
+        parts = type_str.split("or")
+        if "None" in parts:
+            return True
+
+    return False
+
+
 def _validate_args(method: str, expected_args: list[dict[str, str]]) -> list[str]:
     errors = []
     expected_args_names = [arg["name"] for arg in expected_args]
     tree = ast.parse(method)
+
     for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
+        # check only qml.XXX method call
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "qml"
+        ):
             provided_args = {}
 
             # handle positional arguments
@@ -113,15 +138,18 @@ def _validate_args(method: str, expected_args: list[dict[str, str]]) -> list[str
             for expected_arg in expected_args:
                 arg_name = expected_arg["name"]
                 arg_type = expected_arg["type"]
-                if arg_name not in provided_args and not arg_type.startswith("Optional"):
+                if arg_name not in provided_args and not _is_optional_type(arg_type):
                     errors.append(f"Missing required argument '{arg_name}'")
+
+            # only one method call is allowed
+            break
 
     return errors
 
 
 def validate_pennylane_methods(code: str, version: Optional[str] = None) -> dict[str, bool | list[str]]:
     if version is None:
-        version = _get_latest_version()
+        version = get_latest_version()
 
     version = f"v{version}" if not version.startswith("v") else version
     reference = get_reference(version)
