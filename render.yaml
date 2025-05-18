@@ -8,7 +8,6 @@ services:
     branch: main
     buildCommand: pip install -r requirements.txt
     startCommand: bash start.sh
-    port: 10000
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.0
