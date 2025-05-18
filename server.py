@@ -6,9 +6,7 @@ from starlette.responses import JSONResponse, PlainTextResponse
 
 from tools import request_pennylane_reference, validate_pennylane_code_statically
 
-mcp = FastMCP(
-    name="QuantumCodeValidator",
-)
+mcp = FastMCP(name="QuantumCodeValidator", stateless_http=True, json_response=True, log_level="DEBUG")
 
 
 @mcp.tool(
