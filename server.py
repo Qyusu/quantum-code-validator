@@ -83,7 +83,4 @@ async def list_tools(request: Request) -> JSONResponse:
 
 
 if __name__ == "__main__":
-    import asyncio
-
-    # mcp.run(transport="streamable-http")
-    asyncio.run(mcp.run_sse_async(host="0.0.0.0", port=8000))
+    mcp.run(transport="streamable-http")
