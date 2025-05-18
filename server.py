@@ -82,10 +82,8 @@ async def list_tools(request: Request) -> JSONResponse:
     return JSONResponse({"tools": tools})
 
 
-@mcp.custom_route("/version", methods=["GET"])
-async def version(request: Request) -> JSONResponse:
-    return JSONResponse({"version": "1.0.0", "protocol": "mcp", "protocolVersion": "2024-11-05"})
-
-
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    import asyncio
+
+    # mcp.run(transport="streamable-http")
+    asyncio.run(mcp.run_sse_async(host="0.0.0.0", port=8000))
