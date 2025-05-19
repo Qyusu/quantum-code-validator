@@ -8,9 +8,12 @@ from tools import request_pennylane_reference, validate_pennylane_code_staticall
 
 mcp = FastMCP(
     name="QuantumCodeValidator",
-    # stateless_http=True,
-    # json_response=True,
-    # log_level="DEBUG",
+    description="""
+    Provides a set of tools for statically validating Python code that uses the quantum computing library PennyLane.
+    This service checks the correctness and usage of PennyLane methods by comparing the code against the official
+    documentation for a specified version. Additionally, it offers functionality to retrieve reference documentation
+    for individual PennyLane methods, supporting quantum algorithm developers in writing accurate and up-to-date code.
+    """,
 )
 
 
@@ -75,15 +78,19 @@ async def list_tools(request: Request) -> JSONResponse:
     tools = [
         {
             "name": "validate_pennylane_method_by_static",
-            "description": "Static validation of code containing PennyLane methods against the documentation of the target version.",
+            "description": """
+            Static validation of code containing PennyLane methods against the documentation of the target version.
+            """,
         },
         {
             "name": "request_pennylane_method_reference",
-            "description": "Request for the reference documentation of a method in a specific version of the PennyLane library.",
+            "description": """
+            Request for the reference documentation of a method in a specific version of the PennyLane library.
+            """,
         },
     ]
     return JSONResponse({"tools": tools})
 
 
 if __name__ == "__main__":
-    mcp.run(transport="sse", mount_path="/sse")
+    mcp.run(transport="sse")
