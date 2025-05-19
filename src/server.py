@@ -18,11 +18,8 @@ mcp = FastMCP(
 
 
 @mcp.tool(
-    description="""Static validation of code containing PennyLane methods
-    against the documentation of the target version."""
-)
-def validate_pennylane_method_by_static(code: str, version: Optional[str] = None) -> dict:
-    """Static validation of code containing PennyLane methods. PennyLane is a Python library for quantum computing.
+    description="""Static validation of code containing PennyLane methods.
+    PennyLane is a Python library for quantum computing.
 
     This tool statically validates a PennyLane code by following steps:
     1. Check the syntax of the code by ast module.
@@ -30,6 +27,12 @@ def validate_pennylane_method_by_static(code: str, version: Optional[str] = None
     3. Check the usage of PennyLane library methods by comparing with the document of the specific version.
 
     The version is optional. If not specified, version set to None.
+    Current supported versions are v0.35.0, v0.35.1, v0.36.0, v0.37.0, v0.38.0,
+    v0.38.1, v0.39.0, v0.40.0, v0.41.0, v0.41.1.
+    """
+)
+def validate_pennylane_method_by_static(code: str, version: Optional[str] = None) -> dict:
+    """Static validation of code containing PennyLane methods.
 
     Args:
         code (str): source code that includes PennyLane methods.
@@ -42,16 +45,20 @@ def validate_pennylane_method_by_static(code: str, version: Optional[str] = None
 
 
 @mcp.tool(
-    description="Request for the reference documentation of a method in a specific version of the PennyLane library."
-)
-def request_pennylane_method_reference(method_name: str, version: Optional[str] = None) -> str:
-    """Request reference documentation of a method in a specific version of the PennyLane library.
+    description="""Request reference documentation of a method in a specific version of the PennyLane library.
     The PennyLane library is a Python library for quantum computing.
 
     This tool requests reference documentation for a specific version of the PennyLane library.
     The method name only includes the method name and the module name.
     Do not include parentheses and arguments. (ex: "qml.CNOT(wires=[0, 1])" -> "qml.CNOT")
     The version is optional. If not specified, version set to None.
+
+    Current supported versions are v0.35.0, v0.35.1, v0.36.0, v0.37.0, v0.38.0,
+    v0.38.1, v0.39.0, v0.40.0, v0.41.0, v0.41.1.
+    """,
+)
+def request_pennylane_method_reference(method_name: str, version: Optional[str] = None) -> str:
+    """Request reference documentation of a method in a specific version of the PennyLane library.
 
     Args:
         method_name (str): The name of the PennyLane method to request reference documentation. (ex: "qml.CNOT")
@@ -71,84 +78,6 @@ async def health_check(request: Request) -> PlainTextResponse:
 @mcp.custom_route("/", methods=["GET"])
 async def root(request: Request) -> PlainTextResponse:
     return PlainTextResponse("Quantum Code Validator MCP Server")
-
-
-@mcp.custom_route("/tools/list", methods=["GET"])
-async def list_tools(request: Request) -> JSONResponse:
-    tools = [
-        {
-            "name": "validate_pennylane_method_by_static",
-            "description": """
-            Static validation of code containing PennyLane methods against the documentation of the target version.
-            Current supported versions:
-                - v0.35.0
-                - v0.35.1
-                - v0.36.0
-                - v0.37.0
-                - v0.38.0
-                - v0.38.1
-                - v0.39.0
-                - v0.40.0
-                - v0.41.0
-                - v0.41.1
-            """,
-            "input_schema": {
-                "type": "object",
-                "properties": {
-                    "code": {"type": "string", "description": "Source code containing PennyLane methods."},
-                    "version": {
-                        "oneOf": [
-                            {"type": "string"},
-                            {"type": "null"},
-                        ],
-                        "description": """
-                            Version of the PennyLane library (e.g., 'v0.41.1').
-                            If omitted, the latest version is used.
-                            """,
-                    },
-                },
-                "required": ["code"],
-            },
-        },
-        {
-            "name": "request_pennylane_method_reference",
-            "description": """
-            Request for the reference documentation of a method in a specific version of the PennyLane library.
-            Current supported versions:
-                - v0.35.0
-                - v0.35.1
-                - v0.36.0
-                - v0.37.0
-                - v0.38.0
-                - v0.38.1
-                - v0.39.0
-                - v0.40.0
-                - v0.41.0
-                - v0.41.1
-            """,
-            "input_schema": {
-                "type": "object",
-                "properties": {
-                    "method_name": {
-                        "type": "string",
-                        "description": "Name of the PennyLane method (e.g., 'qml.CNOT').",
-                    },
-                    "version": {
-                        "oneOf": [
-                            {"type": "string"},
-                            {"type": "null"},
-                        ],
-                        "description": """
-                            Version of the PennyLane library (e.g., 'v0.41.1').
-                            If omitted, the latest version is used.
-                            """,
-                    },
-                },
-                "required": ["method_name"],
-            },
-        },
-    ]
-    return JSONResponse(tools)
 
 
 if __name__ == "__main__":
