@@ -134,8 +134,10 @@ async def list_tools(request: Request) -> JSONResponse:
                         "description": "Name of the PennyLane method (e.g., 'qml.CNOT').",
                     },
                     "version": {
-                        "type": "string",
-                        "nullable": True,
+                        "oneOf": [
+                            {"type": "string"},
+                            {"type": "null"},
+                        ],
                         "description": """
                             Version of the PennyLane library (e.g., 'v0.41.1').
                             If omitted, the latest version is used.
