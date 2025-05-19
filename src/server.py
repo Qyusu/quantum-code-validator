@@ -97,8 +97,10 @@ async def list_tools(request: Request) -> JSONResponse:
                 "properties": {
                     "code": {"type": "string", "description": "Source code containing PennyLane methods."},
                     "version": {
-                        "type": "string",
-                        "nullable": True,
+                        "oneOf": [
+                            {"type": "string"},
+                            {"type": "null"},
+                        ],
                         "description": """
                             Version of the PennyLane library (e.g., 'v0.41.1').
                             If omitted, the latest version is used.
