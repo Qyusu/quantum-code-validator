@@ -81,83 +81,39 @@ async def list_tools(request: Request) -> JSONResponse:
             "description": """
             Static validation of code containing PennyLane methods against the documentation of the target version.
             """,
-            "parameters": [
-                {
-                    "name": "code",
-                    "type": "str",
-                    "description": "Source code containing PennyLane methods.",
-                    "required": True,
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "code": {"type": "string", "description": "Source code containing PennyLane methods."},
+                    "version": {
+                        "type": "string",
+                        "nullable": True,
+                        "description": "Version of the PennyLane library (e.g., 'v0.41.1'). If omitted, the latest version is used.",
+                    },
                 },
-                {
-                    "name": "version",
-                    "type": "str (Optional)",
-                    "description": (
-                        "Version of the PennyLane library (e.g., 'v0.41.1'). " "If omitted, the latest version is used."
-                    ),
-                    "required": False,
-                },
-            ],
-            "return": {
-                "type": "dict",
-                "description": "Validation result. Contains 'valid' (bool) and 'errors' (list).",
+                "required": ["code"],
             },
-            "usage_example": {
-                "code": (
-                    "validate_pennylane_method_by_static("
-                    '"import pennylane as qml\n"'
-                    '"qml.CNOT(wires=[0, 1])", '
-                    'version="v0.41.1"'
-                    ")"
-                )
-            },
-            "supported_versions": [
-                "v0.35.0",
-                "v0.35.1",
-                "v0.36.0",
-                "v0.37.0",
-                "v0.38.0",
-                "v0.38.1",
-                "v0.39.0",
-                "v0.40.0",
-                "v0.41.0",
-                "v0.41.1",
-            ],
         },
         {
             "name": "request_pennylane_method_reference",
             "description": """
             Request for the reference documentation of a method in a specific version of the PennyLane library.
             """,
-            "parameters": [
-                {
-                    "name": "method_name",
-                    "type": "str",
-                    "description": "Name of the PennyLane method (e.g., 'qml.CNOT').",
-                    "required": True,
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "method_name": {
+                        "type": "string",
+                        "description": "Name of the PennyLane method (e.g., 'qml.CNOT').",
+                    },
+                    "version": {
+                        "type": "string",
+                        "nullable": True,
+                        "description": "Version of the PennyLane library (e.g., 'v0.41.1'). If omitted, the latest version is used.",
+                    },
                 },
-                {
-                    "name": "version",
-                    "type": "str (Optional)",
-                    "description": (
-                        "Version of the PennyLane library (e.g., 'v0.41.1'). " "If omitted, the latest version is used."
-                    ),
-                    "required": False,
-                },
-            ],
-            "return": {"type": "str", "description": "Reference documentation for the specified PennyLane method."},
-            "usage_example": {"code": ("request_pennylane_method_reference(" '"qml.CNOT", ' 'version="v0.41.1"' ")")},
-            "supported_versions": [
-                "v0.35.0",
-                "v0.35.1",
-                "v0.36.0",
-                "v0.37.0",
-                "v0.38.0",
-                "v0.38.1",
-                "v0.39.0",
-                "v0.40.0",
-                "v0.41.0",
-                "v0.41.1",
-            ],
+                "required": ["method_name"],
+            },
         },
     ]
     return JSONResponse({"tools": tools})
