@@ -23,4 +23,4 @@ COPY . .
 RUN uv sync --locked --no-dev
 
 EXPOSE 8000
-CMD python -m src.storage.setup && uv run src.server.py 
+CMD python -m src.storage.setup && uv run src/server.py 
