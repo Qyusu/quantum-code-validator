@@ -7,7 +7,7 @@ from google.cloud import storage
 from google.cloud.exceptions import GoogleCloudError
 from google.oauth2 import service_account
 
-from constants import REF_DOCS_DIR
+from src.constants import REF_DOCS_DIR
 
 
 def get_credentials() -> service_account.Credentials:

@@ -176,6 +176,4 @@ cython_debug/
 .DS_Store
 .python-version
 refdocs/
-src/storage/
-!src/storage/setup.py
 notebooks/
