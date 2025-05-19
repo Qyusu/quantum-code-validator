@@ -1,6 +1,6 @@
 import os
 
-from constants import REF_DOCS_DIR
+from src.constants import REF_DOCS_DIR
 
 
 def get_latest_version() -> str:
