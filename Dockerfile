@@ -3,7 +3,8 @@ FROM python:3.13-slim
 ENV UV_INSTALL_DIR=/root/.local/bin \
     PATH=/root/.local/bin:/app/.venv/bin:$PATH \
     UV_COMPILE_BYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app
 
  WORKDIR /app
 
