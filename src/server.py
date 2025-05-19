@@ -73,7 +73,7 @@ async def root(request: Request) -> PlainTextResponse:
     return PlainTextResponse("Quantum Code Validator MCP Server")
 
 
-@mcp.custom_route("/tools", methods=["GET"])
+@mcp.custom_route("/tools/list", methods=["GET"])
 async def list_tools(request: Request) -> JSONResponse:
     tools = [
         {
@@ -99,7 +99,10 @@ async def list_tools(request: Request) -> JSONResponse:
                     "version": {
                         "type": "string",
                         "nullable": True,
-                        "description": "Version of the PennyLane library (e.g., 'v0.41.1'). If omitted, the latest version is used.",
+                        "description": """
+                            Version of the PennyLane library (e.g., 'v0.41.1').
+                            If omitted, the latest version is used.
+                            """,
                     },
                 },
                 "required": ["code"],
@@ -131,7 +134,10 @@ async def list_tools(request: Request) -> JSONResponse:
                     "version": {
                         "type": "string",
                         "nullable": True,
-                        "description": "Version of the PennyLane library (e.g., 'v0.41.1'). If omitted, the latest version is used.",
+                        "description": """
+                            Version of the PennyLane library (e.g., 'v0.41.1').
+                            If omitted, the latest version is used.
+                            """,
                     },
                 },
                 "required": ["method_name"],
