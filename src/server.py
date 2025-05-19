@@ -80,6 +80,17 @@ async def list_tools(request: Request) -> JSONResponse:
             "name": "validate_pennylane_method_by_static",
             "description": """
             Static validation of code containing PennyLane methods against the documentation of the target version.
+            Current supported versions:
+                - v0.35.0
+                - v0.35.1
+                - v0.36.0
+                - v0.37.0
+                - v0.38.0
+                - v0.38.1
+                - v0.39.0
+                - v0.40.0
+                - v0.41.0
+                - v0.41.1
             """,
             "input_schema": {
                 "type": "object",
@@ -98,6 +109,17 @@ async def list_tools(request: Request) -> JSONResponse:
             "name": "request_pennylane_method_reference",
             "description": """
             Request for the reference documentation of a method in a specific version of the PennyLane library.
+            Current supported versions:
+                - v0.35.0
+                - v0.35.1
+                - v0.36.0
+                - v0.37.0
+                - v0.38.0
+                - v0.38.1
+                - v0.39.0
+                - v0.40.0
+                - v0.41.0
+                - v0.41.1
             """,
             "input_schema": {
                 "type": "object",
