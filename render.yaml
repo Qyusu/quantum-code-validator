@@ -1,14 +1,12 @@
 services:
   - type: web
     name: quantum-code-validator
-    env: python
+    env: docker
     plan: starter
     region: singapore
     repo: https://github.com/Qyusu/quantum-code-validator
     branch: main
-    buildCommand: pip install -r requirements.txt
-    startCommand: bash start.sh
+    autoDeploy: true
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.0
-    autoDeploy: true
