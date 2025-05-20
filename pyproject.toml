@@ -8,11 +8,14 @@ dependencies = [
     "google-cloud-storage>=3.1.0",
     "mcp[cli]==1.9.0",
     "pennylane==0.41.1",
+    "python-dotenv>=1.1.0",
 ]
 
 [dependency-groups]
 dev = [
     "ipykernel>=6.29.5",
+    "langchain[openai]>=0.3.25",
+    "loguru>=0.7.3",
     "openai>=1.78.1",
     "pytest>=8.3.5",
 ]

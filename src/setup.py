@@ -1,6 +1,7 @@
 import json
 import os
 import pathlib
+from pathlib import Path
 from typing import Optional
 
 from google.cloud import storage
@@ -56,7 +57,7 @@ def initialize_storage_client(
         raise GoogleCloudError(f"Failed to initialize storage client: {str(e)}")
 
 
-def download_blob(blob: storage.Blob, prefix: str, download_dir: str = REF_DOCS_DIR) -> None:
+def download_blob(blob: storage.Blob, prefix: str, download_dir: Path = REF_DOCS_DIR) -> None:
     """
     Download the specified blob to local storage.
 
@@ -71,7 +72,7 @@ def download_blob(blob: storage.Blob, prefix: str, download_dir: str = REF_DOCS_
     try:
         blob_name = str(blob.name)  # Explicitly convert to string
         relative_path = blob_name[len(prefix) :] if prefix else blob_name
-        local_path = os.path.join(download_dir, str(relative_path))  # Explicitly convert to string
+        local_path = download_dir / relative_path
 
         # Create directory if it doesn't exist
         pathlib.Path(local_path).parent.mkdir(parents=True, exist_ok=True)
@@ -99,9 +100,7 @@ def main() -> None:
         prefix = os.getenv("GCS_PREFIX", "")
 
         # Initialize storage client
-        client, bucket, prefix = initialize_storage_client(
-            credentials=credentials, bucket_name=bucket_name, prefix=prefix
-        )
+        _, bucket, prefix = initialize_storage_client(credentials=credentials, bucket_name=bucket_name, prefix=prefix)
 
         # Download files
         blobs = bucket.list_blobs(prefix=prefix)

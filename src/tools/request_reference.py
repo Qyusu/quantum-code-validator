@@ -2,7 +2,7 @@ import json
 import os
 from typing import Optional
 
-from src.constants import REF_DOCS_DIR
+from src.constants import RAW_PENNYLANE_JSON_DIR
 from src.tools.common import get_latest_version
 
 
@@ -22,7 +22,7 @@ def request_pennylane_reference(method_name: str, version: Optional[str] = None)
 
     version = f"v{version}" if not version.startswith("v") else version
 
-    reference_path = os.path.join(f"{REF_DOCS_DIR}/pennylane/raw", f"{version}.json")
+    reference_path = RAW_PENNYLANE_JSON_DIR / f"{version}.json"
     if not os.path.exists(reference_path):
         raise FileNotFoundError(f"Reference file not found: {reference_path}")
     with open(reference_path) as f:

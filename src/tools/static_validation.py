@@ -5,7 +5,7 @@ import py_compile
 import re
 from typing import Optional, cast
 
-from src.constants import REF_DOCS_DIR
+from src.constants import FORMATTED_PENNYLANE_JSON_DIR
 from src.tools.common import get_latest_version
 
 TMP_CODE_PATH = "tmp_code.py"
@@ -62,7 +62,7 @@ def _extract_pennylane_methods(code: str) -> list[str]:
 
 
 def get_reference(version: str) -> dict[str, dict[str, list[dict[str, str]]]]:
-    reference_path = os.path.join(f"{REF_DOCS_DIR}/pennylane/format", f"{version}.json")
+    reference_path = FORMATTED_PENNYLANE_JSON_DIR / f"{version}.json"
     if not os.path.exists(reference_path):
         raise FileNotFoundError(f"Reference file not found: {reference_path}")
     with open(reference_path) as f:
