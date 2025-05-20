@@ -2,18 +2,20 @@ from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
 from starlette.requests import Request
-from starlette.responses import JSONResponse, PlainTextResponse
+from starlette.responses import PlainTextResponse
 
 from src.tools import request_pennylane_reference, validate_pennylane_code_statically
 
 mcp = FastMCP(
     name="QuantumCodeValidator",
-    description="""
+    instructions="""
     Provides a set of tools for statically validating Python code that uses the quantum computing library PennyLane.
     This service checks the correctness and usage of PennyLane methods by comparing the code against the official
     documentation for a specified version. Additionally, it offers functionality to retrieve reference documentation
     for individual PennyLane methods, supporting quantum algorithm developers in writing accurate and up-to-date code.
     """,
+    dependencies=["ast", "py_compile", "pennylane"],
+    log_level="DEBUG",
 )
 
 
