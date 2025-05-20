@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import Annotated
 
 from mcp.server.fastmcp import FastMCP
+from pydantic import Field
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 
@@ -33,16 +34,13 @@ mcp = FastMCP(
     v0.38.1, v0.39.0, v0.40.0, v0.41.0, v0.41.1.
     """
 )
-def validate_pennylane_method_by_static(code: str, version: Optional[str] = None) -> dict:
-    """Static validation of code containing PennyLane methods.
-
-    Args:
-        code (str): source code that includes PennyLane methods.
-        version (Optional[str]): The version of the PennyLane library to use. (ex: "v0.41.1")
-
-    Returns:
-        dict: A dictionary containing the validation results.
-    """
+def validate_pennylane_method_by_static(
+    code: Annotated[str, Field(description="source code that includes PennyLane methods.")],
+    version: Annotated[
+        str | None, Field(None, description="The version of the PennyLane library to use. (ex: 'v0.41.1')")
+    ],
+) -> dict:
+    """Static validation of code containing PennyLane methods."""
     return validate_pennylane_code_statically(code, version)
 
 
@@ -59,16 +57,15 @@ def validate_pennylane_method_by_static(code: str, version: Optional[str] = None
     v0.38.1, v0.39.0, v0.40.0, v0.41.0, v0.41.1.
     """,
 )
-def request_pennylane_method_reference(method_name: str, version: Optional[str] = None) -> str:
-    """Request reference documentation of a method in a specific version of the PennyLane library.
-
-    Args:
-        method_name (str): The name of the PennyLane method to request reference documentation. (ex: "qml.CNOT")
-        version (Optional[str]): The version of the PennyLane library to use. (ex: "v0.41.1")
-
-    Returns:
-        str: The reference documentation for the specified PennyLane method.
-    """
+def request_pennylane_method_reference(
+    method_name: Annotated[
+        str, Field(description="The name of the PennyLane method to request reference documentation. (ex: 'qml.CNOT')")
+    ],
+    version: Annotated[
+        str | None, Field(None, description="The version of the PennyLane library to use. (ex: 'v0.41.1')")
+    ],
+) -> str:
+    """Request reference documentation of a method in a specific version of the PennyLane library."""
     return request_pennylane_reference(method_name, version)
 
 
