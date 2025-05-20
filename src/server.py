@@ -5,6 +5,7 @@ from pydantic import Field
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 
+from src.prompts import fix_by_reference_prompt, fix_error_prompt
 from src.tools import request_pennylane_reference, validate_pennylane_code_statically
 
 mcp = FastMCP(
@@ -67,6 +68,18 @@ def request_pennylane_method_reference(
 ) -> str:
     """Request reference documentation of a method in a specific version of the PennyLane library."""
     return request_pennylane_reference(method_name, version)
+
+
+@mcp.prompt()
+def fix_error(code: str, error_message: str) -> str:
+    """Fix the error message."""
+    return fix_error_prompt(code, error_message)
+
+
+@mcp.prompt()
+def fix_by_reference(code: str, reference: str) -> str:
+    """Fix the code by the reference documentation."""
+    return fix_by_reference_prompt(code, reference)
 
 
 @mcp.custom_route("/healthz", methods=["GET"])

@@ -19,17 +19,17 @@ def validate_by_ast(code: str) -> dict[str, bool | list[str]]:
         return {"valid": False, "errors": [f"SyntaxError: {e}"]}
 
 
-def validate_by_py_compile(code: str) -> dict[str, bool | list[str]]:
+def validate_by_py_compile(code: str, tmp_code_path: str = TMP_CODE_PATH) -> dict[str, bool | list[str]]:
     try:
         # write to tmp python file for compile
-        with open(TMP_CODE_PATH, "w") as file:
+        with open(tmp_code_path, "w") as file:
             file.write(code)
-        py_compile.compile(TMP_CODE_PATH, doraise=True)
-        # remove tmp python file
-        os.remove(TMP_CODE_PATH)
+        py_compile.compile(tmp_code_path, doraise=True)
         return {"valid": True, "errors": []}
     except py_compile.PyCompileError as e:
         return {"valid": False, "errors": [f"py_compile: Syntax error: {e}"]}
+    finally:
+        os.remove(tmp_code_path)
 
 
 def _extract_pennylane_methods(code: str) -> list[str]:
@@ -69,8 +69,8 @@ def get_reference(version: str) -> dict[str, dict[str, list[dict[str, str]]]]:
         return json.load(f)
 
 
-def _extract_method_name(code_str: str) -> str:
-    tree = ast.parse(code_str)
+def _extract_method_name(method_str: str) -> str:
+    tree = ast.parse(method_str)
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
             if isinstance(node.func, ast.Attribute):
@@ -108,6 +108,7 @@ def _is_optional_type(type_str: str) -> bool:
 def _validate_args(method: str, expected_args: list[dict[str, str]]) -> list[str]:
     errors = []
     expected_args_names = [arg["name"] for arg in expected_args]
+    required_args = [arg for arg in expected_args if bool(arg["required"])]
     tree = ast.parse(method)
 
     for node in ast.walk(tree):
@@ -135,11 +136,14 @@ def _validate_args(method: str, expected_args: list[dict[str, str]]) -> list[str
                     errors.append(f"Unexpected argument '{arg}'")
 
             # check arguments existence and types
-            for expected_arg in expected_args:
+            for expected_arg in required_args:
                 arg_name = expected_arg["name"]
                 arg_type = expected_arg["type"]
-                if arg_name not in provided_args and not _is_optional_type(arg_type):
-                    errors.append(f"Missing required argument '{arg_name}'")
+                arg_description = expected_arg["description"]
+                if arg_name not in provided_args:
+                    errors.append(
+                        f"Missing required argument '{arg_name}'.\n{arg_name} ({arg_type}): {arg_description}"
+                    )
 
             # only one method call is allowed
             break

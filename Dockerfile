@@ -20,8 +20,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 COPY pyproject.toml uv.lock ./
 RUN uv sync --locked --no-install-project --no-dev
 
-COPY . .
-RUN uv sync --locked --no-dev
+COPY src/ ./src/
 
 EXPOSE 8000
-CMD python -m src.storage.setup && uv run src/server.py 
+CMD python -m storage.setup && uv run server.py 
