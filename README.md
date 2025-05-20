@@ -54,34 +54,97 @@ The server provides two main tools:
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/quantum-code-validator.git
-   cd quantum-code-validator
-   ```
+### 1. Install with uv
 
-2. Create and activate a virtual environment:
+```bash
+git clone https://github.com/yourusername/quantum-code-validator.git
+cd quantum-code-validator
+```
+
+1. Create and activate a virtual environment:
    ```bash
    python -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
-3. Install uv (if not already installed):
+2. Install uv (if not already installed):
    ```bash
    curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
 
-4. Install dependencies using uv:
+3. Install dependencies using uv:
    ```bash
    uv sync
    ```
 
-## Development
+4. Run the server:
+   ```bash
+   uv run src/server.py
+   ```
 
-The project uses Python's modern tooling:
-- `pyproject.toml` for project configuration
-- `uv` for dependency management
-- FastMCP for the server implementation
+---
+
+### 2. Install with Docker
+
+1. Set the required environment variables (for downloading reference documents from Google Cloud Storage):
+   - `GOOGLE_CREDENTIALS_JSON`: Service account JSON string
+   - `GCS_BUCKET_NAME`: GCS bucket name
+   - `GCS_PREFIX`: (Optional) Prefix within the bucket
+
+2. Build and run the container:
+   ```bash
+   docker build -t quantum-code-validator .
+   docker run -p 8000:8000 \
+     -e GOOGLE_CREDENTIALS_JSON='...' \
+     -e GCS_BUCKET_NAME='your-bucket' \
+     -e GCS_PREFIX='your/prefix' \
+     quantum-code-validator
+   ```
+
+   *You can pass `GOOGLE_CREDENTIALS_JSON` directly as a string or use a `.env` file with the `--env-file` option.*
+
+3. The server will start on port 8000 by default.
+
+## Setting MCP Server
+### 1. Local MCP Server by uv 
+```json
+{
+  "mcpServers": {
+      "quantum-code-validator": {
+          "command": "uv",
+          "args": [
+              "--directory",
+              "/your/mcp/server/directory/quantum-code-validator",
+              "run",
+              "server.py"
+          ]
+      }
+  }
+}
+```
+
+### 2. Local MCP Server by Docker
+```json
+{
+  "mcpServers": {
+      "quantum-code-validator": {
+          "command": "docker",
+          "args": [
+              "run",
+              "-p",
+              "8000:8000",
+              "-e",
+              "GOOGLE_CREDENTIALS_JSON=...",
+              "-e",
+              "GCS_BUCKET_NAME=your-bucket",
+              "-e",
+              "GCS_PREFIX=your/prefix",
+              "quantum-code-validator"
+          ]
+      }
+  }
+}
+```
 
 
 ## License
