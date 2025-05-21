@@ -27,7 +27,7 @@ mcp = FastMCP(
         - This tool is used when the user requests reference documentation for a specific method.
     """,
     dependencies=["ast", "py_compile", "pennylane"],
-    log_level="DEBUG",
+    log_level="INFO",
 )
 
 
