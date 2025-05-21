@@ -1,3 +1,4 @@
+import os
 from typing import Annotated
 
 from mcp.server.fastmcp import FastMCP
@@ -5,6 +6,7 @@ from pydantic import Field
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 
+from src.constants import SUPPORTED_PENNYLANE_VERSIONS
 from src.prompts import fix_by_reference_prompt, fix_error_prompt
 from src.tools import request_pennylane_reference, validate_pennylane_code_statically
 
@@ -15,6 +17,14 @@ mcp = FastMCP(
     This service checks the correctness and usage of PennyLane methods by comparing the code against the official
     documentation for a specified version. Additionally, it offers functionality to retrieve reference documentation
     for individual PennyLane methods, supporting quantum algorithm developers in writing accurate and up-to-date code.
+
+    Tools:
+    - validate_pennylane_method_by_static():
+        - Static validation of code containing PennyLane methods.
+        - This tool is used after generating code with PennyLane or when the user requests confirmation.
+    - request_pennylane_method_reference():
+        - Request reference documentation of a method in a specific version of the PennyLane library.
+        - This tool is used when the user requests reference documentation for a specific method.
     """,
     dependencies=["ast", "py_compile", "pennylane"],
     log_level="DEBUG",
@@ -31,9 +41,10 @@ mcp = FastMCP(
     3. Check the usage of PennyLane library methods by comparing with the document of the specific version.
 
     The version is optional. If not specified, version set to None.
-    Current supported versions are v0.35.0, v0.35.1, v0.36.0, v0.37.0, v0.38.0,
-    v0.38.1, v0.39.0, v0.40.0, v0.41.0, v0.41.1.
-    """
+    Current supported versions are {supported_versions}.
+    """.format(
+        supported_versions=", ".join(SUPPORTED_PENNYLANE_VERSIONS)
+    )
 )
 def validate_pennylane_method_by_static(
     code: Annotated[str, Field(description="source code that includes PennyLane methods.")],
@@ -54,9 +65,10 @@ def validate_pennylane_method_by_static(
     Do not include parentheses and arguments. (ex: "qml.CNOT(wires=[0, 1])" -> "qml.CNOT")
     The version is optional. If not specified, version set to None.
 
-    Current supported versions are v0.35.0, v0.35.1, v0.36.0, v0.37.0, v0.38.0,
-    v0.38.1, v0.39.0, v0.40.0, v0.41.0, v0.41.1.
-    """,
+    Current supported versions are {supported_versions}.
+    """.format(
+        supported_versions=", ".join(SUPPORTED_PENNYLANE_VERSIONS)
+    ),
 )
 def request_pennylane_method_reference(
     method_name: Annotated[
@@ -93,4 +105,14 @@ async def root(request: Request) -> PlainTextResponse:
 
 
 if __name__ == "__main__":
-    mcp.run(transport="sse")
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Quantum Code Validator MCP Server")
+    parser.add_argument(
+        "--transport",
+        choices=["stdio", "sse", "streamable-http"],
+        default=os.environ.get("TRANSPORT", "sse"),
+        help="Transport type: 'stdio', 'sse', or 'streamable-http' (default: 'sse' or $TRANSPORT env var)",
+    )
+    args = parser.parse_args()
+    mcp.run(transport=args.transport)

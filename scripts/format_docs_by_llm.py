@@ -12,23 +12,14 @@ from loguru import logger
 from pydantic import BaseModel, Field
 from tqdm import tqdm
 
+from src.constants import SUPPORTED_PENNYLANE_VERSIONS
+
 load_dotenv(verbose=True)
 if not os.environ.get("OPENAI_API_KEY"):
     os.environ["OPENAI_API_KEY"] = getpass.getpass("Enter API key for OpenAI: ")
 
 OPENAI_MODEL_VERSION = "gpt-4.1-2025-04-14"
-PENNYLANE_VERSIONS = [
-    "v0.35.0",
-    "v0.35.1",
-    "v0.36.0",
-    "v0.37.0",
-    "v0.38.0",
-    "v0.38.1",
-    "v0.39.0",
-    "v0.40.0",
-    "v0.41.0",
-    "v0.41.1",
-]
+
 REF_DOCS_DIRC = Path(__file__).parent.parent.absolute() / "refdocs" / "pennylane"
 RAW_JSON_DIR = REF_DOCS_DIRC / "raw"
 FORMATTED_JSON_DIR = REF_DOCS_DIRC / "formatted"
@@ -140,4 +131,4 @@ def format_docs_by_llm(versions: list[str]) -> None:
 
 
 if __name__ == "__main__":
-    format_docs_by_llm(PENNYLANE_VERSIONS)
+    format_docs_by_llm(SUPPORTED_PENNYLANE_VERSIONS)

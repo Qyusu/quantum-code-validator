@@ -116,7 +116,9 @@ cd quantum-code-validator
               "--directory",
               "/your/mcp/server/directory/quantum-code-validator",
               "run",
-              "server.py"
+              "server.py",
+              "--transport",
+              "stdio"
           ]
       }
   }
@@ -139,6 +141,8 @@ cd quantum-code-validator
               "GCS_BUCKET_NAME=your-bucket",
               "-e",
               "GCS_PREFIX=your/prefix",
+              "-e",
+              "TRANSPORT=stdio"
               "quantum-code-validator"
           ]
       }
