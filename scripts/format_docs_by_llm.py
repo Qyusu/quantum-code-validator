@@ -1,6 +1,7 @@
 import getpass
 import json
 import os
+import sys
 from pathlib import Path
 from textwrap import dedent
 
@@ -131,4 +132,15 @@ def format_docs_by_llm(versions: list[str]) -> None:
 
 
 if __name__ == "__main__":
-    format_docs_by_llm(SUPPORTED_PENNYLANE_VERSIONS)
+    if len(sys.argv) != 2:
+        print(
+            """No version specified. Using default supported versions.
+        If you want to specify a version, please use the following format:
+        python format_docs_by_llm.py <version1>,<version2>,<version3>
+        """
+        )
+        versions = SUPPORTED_PENNYLANE_VERSIONS
+    else:
+        versions = sys.argv[1].split(",")
+
+    format_docs_by_llm(versions)
