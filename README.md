@@ -103,9 +103,9 @@ cd quantum-code-validator
    ```
 
    *You can pass `GOOGLE_CREDENTIALS_JSON` directly as a string or use a `.env` file with the `--env-file` option.*
--->
 
 3. The server will start on port 8000 by default.
+-->
 
 ## Setting MCP Server
 ### 1. Local MCP Server by uv 
