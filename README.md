@@ -84,6 +84,7 @@ cd quantum-code-validator
 
 ---
 
+<!--
 ### 2. Install with Docker
 
 1. Set the required environment variables (for downloading reference documents from Google Cloud Storage):
@@ -102,6 +103,7 @@ cd quantum-code-validator
    ```
 
    *You can pass `GOOGLE_CREDENTIALS_JSON` directly as a string or use a `.env` file with the `--env-file` option.*
+-->
 
 3. The server will start on port 8000 by default.
 
