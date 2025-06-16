@@ -109,19 +109,19 @@ cd quantum-code-validator
 
 ## Setting MCP Server
 ### 1. Local MCP Server by uv 
-1.1 Load and Parse PennyLane Source Code
+#### 1.1 Load and Parse PennyLane Source Code
 Load basic information from PennyLane's source code and save it as JSON files by version. The PennyLane version will be the one installed in the execution environment, so please switch it using the uv command as needed.
 ```bash
 uv run scripts/parse_pennylane_api.py ./refdocs/pennylane/raw/v0.41.1.json
 ```
 
-1.2 Format Source Code to Document
+#### 1.2 Format Source Code to Document
 Next, we will use an LLM to format the basic information extracted in Step 1 into document information that can be accessed on MCP. Please specify the PennyLane versions to be converted into documents as a comma-separated list. Note that this process uses an LLM, so the "OPENAI_API_KEY" environment variable must be set, and there is a cost of approximately $2.50 per version. The formatting results will be saved in `"./refdocs/pennylane/formatted"`.
 ```bash
 uv run scripts/format_docs_by_llm.py v0.41.0,v0.41.1
 ```
 
-1.3 Setup MCP Server on Local
+#### 1.3 Setup MCP Server on Local
 Finally, by configuring the `mcp.json` file according to the platform and starting the MCP server, the tool becomes available for use with the target tool. As a reference, a [link](https://modelcontextprotocol.io/quickstart/server#testing-your-server-with-claude-for-desktop) to the documentation on how to configure it for Claude Desktop is provided.
 ```json
 {
@@ -141,6 +141,7 @@ Finally, by configuring the `mcp.json` file according to the platform and starti
 }
 ```
 
+<!--
 ### 2. Use Remote Server
 Although Claude Desktop does not support MCP servers launched remotely, tools such as Cline or Cursor can connect to MCP via a remote server using the following configuration.
 ```json
@@ -152,6 +153,7 @@ Although Claude Desktop does not support MCP servers launched remotely, tools su
   }
 }
 ```
+-->
 
 
 ## License
